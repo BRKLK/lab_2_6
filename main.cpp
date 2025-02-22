@@ -11,7 +11,7 @@ struct test_struct {};
 template <typename T, typename std::enable_if_t<
     is_arithmetic_v<T> &&
     !is_same_v<T, char> &&
-    !is_same_v<T, char>, int> = 0>
+    !is_same_v<T, bool>, int> = 0>
 class Matrix
 {
 private:
@@ -80,7 +80,8 @@ public:
         }
     }
 
-    // ??????????????????????????????????????????????????????
+
+    // ?????????????????????????????????????????????????????? void
     void operator=(Matrix& other)
     {
 
@@ -155,6 +156,13 @@ public:
 
     void operator+=(Matrix& other)
     {
+
+        if(n != other.n || m != other.m)
+        {
+            throw std::invalid_argument("Matrices should have same dimensions!");
+        }
+
+
         for(int i = 0; i < n; i++)
         {
             for(int j = 0; j < m; j++)
@@ -251,14 +259,27 @@ public:
 int main()
 {
     std::cout << '\n';
-    Matrix<int> m1(3, 3, 3);
-    Matrix<int> m2(2, 2, 2);
+    Matrix<int> m1(2, 3, 0);
+    Matrix<int> m2(2, 3, 0);
+    Matrix<int> m3(3, 2, 0);
 
+    std::cout<<"m1:" << '\n';
     m1.SetValues();
+    std::cout<<"m2:" << '\n';
+    m2.SetValues();
+    std::cout<<"m3:" << '\n';
+    m3.SetValues();
+
+    (m1 + m2).print();
+    std::cout <<'\n';
+    (m1*m3).print();
+    std::cout <<'\n';
 
 
-
-    std::cout << m1.Get_Determinant();
+    std::cout<<"m4:" << '\n';
+    Matrix<int> m4(3, 3, 0);
+    m4.SetValues();
+    std::cout << m4.Get_Determinant();
 
     return 0;
 }
